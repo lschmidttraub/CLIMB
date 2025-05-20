@@ -1,0 +1,24 @@
+name: ml
+channels:
+  - defaults
+  - https://repo.anaconda.com/pkgs/main
+  - https://repo.anaconda.com/pkgs/r
+  - https://repo.anaconda.com/pkgs/msys2
+  - conda-forge
+dependencies:
+  - numpy
+  - pytorch
+  - scipy
+  - transformers
+  - wandb
+  - datasets
+  - tqdm
+  - pandas
+  - ca-certificates
+  - openssl
+  - lightning
+  - torchinfo
+  - scikit-learn
+  - matplotlib
+  - certifi
+prefix: C:\Users\leosc\mambaforge\envs\ml

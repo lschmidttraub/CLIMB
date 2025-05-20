@@ -1,0 +1,65 @@
+program: your_script_name.py # REPLACE with the name of your Python script
+method: bayes # Or random, grid
+metric:
+  name: eval_loss # For MLM, usually loss. Or eval_mlm_accuracy if you compute that
+  goal: minimize # minimize loss, maximize accuracy
+parameters:
+  # --- BertConfig Parameters ---
+  hidden_size:
+    values: [256, 384, 512] # Embedding dimension
+  num_hidden_layers:
+    values: [3, 4, 6]
+  num_attention_heads:
+    # Ensure hidden_size is divisible by num_attention_heads
+    # For simplicity, let's pick values that work with all hidden_sizes above,
+    # or you can make them dependent (more complex) or just be careful.
+    # For now, let's assume you'll ensure compatibility in your script or filter later.
+    # A common choice is hidden_size / 64.
+    # Example: If hidden_size is 256, heads could be 4. If 384, heads 6. If 512, heads 8.
+    # To keep it simple for a first sweep, let's fix it or make it a choice related to hidden_size.
+    # For a first sweep, maybe just sweep hidden_size and num_hidden_layers and fix heads.
+    # Or, if your script can dynamically set heads based on hidden_size, that's best.
+    # Let's try to sweep it with a few options:
+    values: [4, 6, 8] # Your script will need to handle BertConfig init with these
+
+  # --- MLM Training Parameters ---
+  mlm_learning_rate:
+    distribution: log_uniform_values
+    min: 1e-5
+    max: 5e-4
+  mlm_batch_size:
+    values: [16, 32, 64]
+  mlm_epochs:
+    values: [3, 5, 8] # For 10k samples, more epochs might be fine
+  mlm_probability:
+    values: [0.1, 0.15, 0.20]
+
+  # --- Fixed Parameters for this sweep (can be moved to script defaults) ---
+  # These are parameters you are NOT sweeping in this specific config
+  # but your script might expect them in wandb.config
+  base_model_hf_name:
+    value: "distilbert-base-uncased"
+  tokenizer_name:
+    value: "yzimmermann/REGEX-PubChem"
+  dataset_subset_size:
+    value: 100000 # Using your ds_stream.take(100_000)
+  train_sample_size:
+    value: 10000 # Using your ds_select (10_000)
+  seed:
+    value: 42
+  bf16:
+    value: true # Assuming your hardware supports it
+  # Add other non-swept parameters that your main_training_pipeline expects
+  # from sweep_config, like eval_steps, logging_steps etc.
+  # Or better, use sweep_config.get("param", default_value_in_script)
+# --- Example of parameters for main_training_pipeline's TrainingArguments ---
+# You can either define them here or have defaults in your script and override with swept ones.
+# It's cleaner to have main script structure define TrainingArguments and use swept values.
+# For example, sweep mlm_learning_rate, and then in the script:
+# training_args = TrainingArguments(learning_rate=sweep_config.mlm_learning_rate, ...)
+
+# For controlling two-stage training (add later if needed):
+#  do_mlm:
+#    value: true # For this sweep, we are doing MLM
+#  do_mtr:
+#    value: false # For this sweep, we are NOT doing MTR
