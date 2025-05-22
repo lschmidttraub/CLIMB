@@ -24,6 +24,7 @@ wandb.login(key=WANDB_API_KEY)
 def train_pipeline():
     run = wandb.init()
     cfg = wandb.config
+
     tokenizer = PreTrainedTokenizerFast.from_pretrained(cfg.tokenizer)
 
     def tokenize_function(data):
@@ -51,8 +52,7 @@ def train_pipeline():
     )
 
     climb_model_instance = CLIMBModel(
-        base_model_hf_name=cfg.get("base_model_hf_name", "distilbert-base-uncased"),
-        experiment_run_name=experiment_run_name,
+        model_name = cfg.name,
         config=bert_model_config,
         tokenizer=tokenizer,
         tokenize_function=tokenize_function,

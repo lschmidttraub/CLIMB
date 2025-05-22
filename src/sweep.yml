@@ -6,21 +6,21 @@ metric:
 parameters:
   # --- BertConfig Parameters ---
   hidden_size:
-    values: [256, 384, 512] # Embedding dimension
+    values: [256, 384, 512, 768] # Embedding dimension
   num_hidden_layers:
     values: [3, 4, 6]
-  num_attention_heads:
-    # Ensure hidden_size is divisible by num_attention_heads
-    # For simplicity, let's pick values that work with all hidden_sizes above,
-    # or you can make them dependent (more complex) or just be careful.
-    # For now, let's assume you'll ensure compatibility in your script or filter later.
-    # A common choice is hidden_size / 64.
-    # Example: If hidden_size is 256, heads could be 4. If 384, heads 6. If 512, heads 8.
-    # To keep it simple for a first sweep, let's fix it or make it a choice related to hidden_size.
-    # For a first sweep, maybe just sweep hidden_size and num_hidden_layers and fix heads.
-    # Or, if your script can dynamically set heads based on hidden_size, that's best.
-    # Let's try to sweep it with a few options:
-    values: [4, 6, 8] # Your script will need to handle BertConfig init with these
+  # num_attention_heads:
+  # Ensure hidden_size is divisible by num_attention_heads
+  # For simplicity, let's pick values that work with all hidden_sizes above,
+  # or you can make them dependent (more complex) or just be careful.
+  # For now, let's assume you'll ensure compatibility in your script or filter later.
+  # A common choice is hidden_size / 64.
+  # Example: If hidden_size is 256, heads could be 4. If 384, heads 6. If 512, heads 8.
+  # To keep it simple for a first sweep, let's fix it or make it a choice related to hidden_size.
+  # For a first sweep, maybe just sweep hidden_size and num_hidden_layers and fix heads.
+  # Or, if your script can dynamically set heads based on hidden_size, that's best.
+  # Let's try to sweep it with a few options:
+  # values: [4, 6, 8] # Your script will need to handle BertConfig init with these
 
   # --- MLM Training Parameters ---
   mlm_learning_rate:
@@ -41,12 +41,6 @@ parameters:
     value: "distilbert-base-uncased"
   tokenizer_name:
     value: "yzimmermann/REGEX-PubChem"
-  dataset_subset_size:
-    value: 100000 # Using your ds_stream.take(100_000)
-  train_sample_size:
-    value: 10000 # Using your ds_select (10_000)
-  seed:
-    value: 42
   bf16:
     value: true # Assuming your hardware supports it
   # Add other non-swept parameters that your main_training_pipeline expects

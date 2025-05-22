@@ -1,4 +1,4 @@
-name: ml
+name: climb
 channels:
   - defaults
   - https://repo.anaconda.com/pkgs/main
@@ -8,17 +8,11 @@ channels:
 dependencies:
   - numpy
   - pytorch
-  - scipy
   - transformers
   - wandb
   - datasets
-  - tqdm
-  - pandas
   - ca-certificates
   - openssl
-  - lightning
-  - torchinfo
   - scikit-learn
-  - matplotlib
   - certifi
-prefix: C:\Users\leosc\mambaforge\envs\ml
+prefix: C:\Users\leosc\mambaforge\envs\climb

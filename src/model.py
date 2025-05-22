@@ -1,9 +1,8 @@
 import wandb
-from config import WANDB_API_KEY, HF_NOTEBOOK_KEY
+from config import WANDB_API_KEY, SEED
 import numpy as np
-import pandas as pd
 import torch
-from datasets import load_dataset, Dataset
+from datasets import load_dataset
 from zoneinfo import ZoneInfo
 from transformers import (
     BertConfig,
@@ -166,14 +165,10 @@ if __name__ == "__main__":
     regex_tokenizer = PreTrainedTokenizerFast.from_pretrained(
         "yzimmermann/REGEX-PubChem"
     )
-    # bpe_tokenizer = PreTrainedTokenizerFast.from_pretrained("leosct/smiles-bpe")
-    print(regex_tokenizer.vocab_size)
+    bpe_tokenizer = PreTrainedTokenizerFast.from_pretrained("leosct/smiles-bpe")
 
-    ds_stream = load_dataset("yzimmermann/smiles-dump", split="train", streaming=True)
-    ds = ds_stream.take(100_000)
-    ds = Dataset.from_list(list(ds), features=ds_stream.features)
-
-    ds_select = ds.shuffle(seed=42).select(range(10_000))
+    ds = load_dataset("datasets/smiles-100k.hf")
+    ds_select = ds.shuffle(seed=SEED).select(range(10_000))
 
     def tokenize_function(examples):
         return regex_tokenizer(examples["SMILES"], truncation=True, padding=False)
