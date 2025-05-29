@@ -1,0 +1,30 @@
+program: compare_tokenizers.py # Your Python script
+method: grid # We want to try specific combinations
+metric:
+  name: eval/loss # Metric to track (Trainer logs eval_loss as eval/loss)
+  goal: minimize # Or 'eval/accuracy' and 'maximize'
+parameters:
+  model_checkpoint: # This parameter implies the tokenizer
+    value: "distilbert-base-uncased" # Tokenizer/Model 1
+  tokenizer:
+    values:
+      - "yzimmermann/REGEX-PubChem"
+      - "leosct/smiles-bpe"
+  # --- You can fix other parameters or add more variations ---
+  learning_rate:
+    value: 2e-5 # Fixed learning rate for this sweep
+  batch_size:
+    value: 8 # Fixed batch size
+  num_epochs:
+    value: 1 # Fixed number of epochs for quick test
+  data_paths:
+    values:
+      - "datasets/BBBP.csv"
+      - "delaney-processed.csv"
+      - "HIV.csv"
+  data_format:
+    value: "csv" # Or "mat"
+  text_column:
+    value: "text" # Column name for text in your data
+  label_column:
+    value: "label" # Column name for labels in your data

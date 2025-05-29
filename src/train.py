@@ -33,9 +33,7 @@ def train_pipeline():
     bert_model_config = BertConfig.from_pretrained(
         cfg.get("base_model_hf_name", "distilbert-base-uncased")
     )
-    bert_model_config.vocab_size = (
-        tokenizer.vocab_size
-    )  # Assumes regex_tokenizer is defined
+    bert_model_config.vocab_size = tokenizer.vocab_size
     bert_model_config.pad_token_id = tokenizer.pad_token_id
 
     bert_model_config.hidden_size = cfg.hidden_size
@@ -52,7 +50,7 @@ def train_pipeline():
     )
 
     climb_model_instance = CLIMBModel(
-        model_name = cfg.name,
+        model_name=cfg.name,
         config=bert_model_config,
         tokenizer=tokenizer,
         tokenize_function=tokenize_function,

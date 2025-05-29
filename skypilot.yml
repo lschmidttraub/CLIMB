@@ -1,0 +1,26 @@
+resources:
+  # Optional; if left out, automatically pick the cheapest cloud.
+  infra: aws
+  # 8x NVIDIA A100 GPU
+  accelerators: A100:8
+
+# Working directory (optional) containing the project codebase.
+# Its contents are synced to ~/sky_workdir/ on the cluster.
+workdir: .
+
+# Typical use: pip install -r requirements.txt
+# Invoked under the workdir (i.e., can use its files).
+setup: |
+  echo "Running setup."
+
+# Typical use: make use of resources, such as running training.
+# Invoked under the workdir (i.e., can use its files).
+# run: |
+# docker pull your-registry/your-llm-trainer:latest
+# docker run --gpus all \
+#   --ipc=host \ # Often needed for PyTorch distributed
+#   -v /sky_workdir:/app \ # SkyPilot syncs workdir here by default
+#   -v /sky_outputs:/outputs \ # For saving checkpoints/results
+#   -v /sky_data_mount:/data \ # If SkyPilot mounts external data
+#   your-registry/your-llm-trainer:latest \
+#   python /app/train.py --data_dir /data/my_dataset --output_dir /outputs/checkpoints
